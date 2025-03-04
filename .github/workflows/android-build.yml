@@ -1,0 +1,35 @@
+name: Build Spotube for Android
+
+on:
+  push:
+    branches:
+      - master  # Si attiva quando fai push sulla branch principale
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"  # Puoi specificare una versione esatta, es. "3.16.0"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: Spotube-Android-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
